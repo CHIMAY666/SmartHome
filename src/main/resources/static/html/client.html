@@ -211,7 +211,12 @@
             light_output.appendChild(document.createElement('br'));
         }
         //事件
-
+        l_dButtons[0].addEventListener('click', function() {
+            const randomNumber = Math.round(Math.random());
+            l_status[0].textContent = status[randomNumber];
+            if (l_status[0].textContent==="已关闭")l_status[0].style.color='red';
+            else if (l_status[0].textContent==="运行中")l_status[0].style.color='green';
+        });
     });
 </script>
 </body>
