@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>client</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.staticfile.net/layui/2.9.11/css/layui.css" rel="stylesheet">
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo layui-hide-xs layui-bg-black">智能家居</div>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域 -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">服务端</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">设备控制</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">客户端</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="#">设备数据</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 35px;">
+            <blockquote class="layui-elem-quote layui-text">
+                设备数据
+            </blockquote>
+            <div class="layui-card layui-panel">
+                <div class="layui-card-header">
+                    温度传感器
+                </div>
+                <div class="layui-card-body">
+                    <li id="temper_output"></li>
+                </div>
+                <div class="layui-card-header">
+                    湿度传感器
+                </div>
+                <div class="layui-card-body">
+                    <li id="humid_output"></li>
+                </div>
+                <div class="layui-card-header">
+                    光照传感器
+                </div>
+                <div class="layui-card-body">
+                    <li id="light_output"></li>
+                </div>
+            </div>
+            <br><br>
+        </div>
+    </div>
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        SmartHome
+    </div>
+</div>
+
+<script src="//cdn.staticfile.net/layui/2.9.11/layui.js"></script>
+<script>
+    //JS
+    const linkElements = document.querySelectorAll('.layui-nav-child dd a');
+    linkElements.forEach(function(linkElement) {
+        linkElement.addEventListener('click', function() {
+            // 获取该元素的文本内容
+            const text = this.textContent.trim();
+            // 根据文本内容确定跳转的目标页面
+            if (text === '设备控制') {
+                window.location.href = 'server.html';
+            } else if (text === '设备数据') {
+                window.location.href = 'client.html';
+            }
+        });
+    });
+    layui.use(['element', 'layer', 'util'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+        var util = layui.util;
+        var $ = layui.$;
+        const list = [
+            {
+                "deviceType": "temperature_sensor",
+                "deviceId": 1
+            },
+            {
+                "deviceType": "humidity_sensor",
+                "deviceId": 2
+            },
+            {
+                "deviceType": "lamp",
+                "deviceId": 3
+            },
+            {
+                "deviceType": "lamp",
+                "deviceId": 4
+            },
+            {
+                "deviceType": "lamp",
+                "deviceId": 5
+            },
+        ];
+        const status=["已关闭","运行中"];
+        const cardHeaderElements = document.querySelectorAll('.layui-card-header');
+        cardHeaderElements.forEach(element => {
+            element.style.fontSize = '20px'; // 设置字体大小为20px
+            element.style.textAlign = 'center'; // 设置文本居中显示
+        });
+        const blockquoteElement = document.querySelector('.layui-elem-quote.layui-text');
+        blockquoteElement.style.fontSize = '25px';
+        let temper_count = 0,humid_count=0,light_count=0;
+        // 遍历列表，统计符合条件的元素数量
+        for (let i = 0; i < list.length; i++) {
+            if(list[i].deviceType==="temperature_sensor")temper_count++;
+            if(list[i].deviceType==="humidity_sensor")humid_count++;
+            if(list[i].deviceType==="lamp")light_count++;
+        }
+        // 将符合条件的元素以文本和按钮的形式添加到前端页面中
+        const t_dButtons = new Array(temper_count);
+        const h_dButtons = new Array(humid_count);
+        const l_dButtons = new Array(light_count);
+        const t_status= new Array(temper_count);
+        const h_status = new Array(humid_count);
+        const l_status = new Array(light_count);
+        const temper_output = document.getElementById('temper_output');
+        const humid_output = document.getElementById('humid_output');
+        const light_output = document.getElementById('light_output');
+        for (let i = 0; i < temper_count; i++) {
+            const textElement = document.createElement('span');
+            textElement.textContent = `温度传感器 ${i + 1} `;
+            textElement.style.fontSize = '18px';
+            t_status[i]=document.createElement('span');
+            t_status[i].textContent=status[0];
+            t_status[i].style.fontSize='18px';
+            if (t_status[i].textContent==="已关闭")t_status[i].style.color='red';
+            else if (t_status[i].textContent==="运行中")t_status[i].style.color='green';
+            t_dButtons[i] = document.createElement('button');
+            t_dButtons[i].setAttribute('class', 'layui-btn layui-btn-lg layui-btn-normal')
+            t_dButtons[i].textContent = '查看详情';
+            temper_output.appendChild(textElement);
+            temper_output.appendChild(t_status[i]);
+            temper_output.appendChild(t_dButtons[i]);
+            temper_output.style.textAlign = 'center'; // 居中对齐
+            temper_output.style.marginTop = '50px';
+            textElement.style.marginRight="100px";
+            t_status[i].style.marginBottom = '20px';
+            t_dButtons[i].style.marginBottom = '20px';
+            textElement.style.marginBottom='40px';
+            t_status[i].style.marginRight='40px';
+            temper_output.appendChild(document.createElement('br'));
+            temper_output.appendChild(document.createElement('br'));
+        }
+        for (let i = 0; i <humid_count; i++) {
+            const textElement = document.createElement('span');
+            textElement.textContent = `湿度传感器 ${i + 1}`;
+            textElement.style.fontSize = '18px';
+            h_status[i]=document.createElement('span');
+            h_status[i].textContent=status[0];
+            h_status[i].style.fontSize='18px';
+            if (h_status[i].textContent==="已关闭")h_status[i].style.color='red';
+            else if (h_status[i].textContent==="运行中")h_status[i].style.color='green';
+            h_dButtons[i] = document.createElement('button');
+            h_dButtons[i].setAttribute('class', 'layui-btn layui-btn-lg layui-btn-normal')
+            h_dButtons[i].textContent = '查看详情';
+            humid_output.appendChild(textElement);
+            humid_output.appendChild(h_status[i]);
+            humid_output.appendChild(h_dButtons[i]);
+            humid_output.style.textAlign = 'center'; // 居中对齐
+            humid_output.style.marginTop = '50px';
+            textElement.style.marginRight="100px";
+            h_status[i].style.marginBottom = '20px';
+            h_dButtons[i].style.marginBottom = '20px';
+            textElement.style.marginBottom='40px';
+            h_status[i].style.marginRight='40px';
+            humid_output.appendChild(document.createElement('br'));
+            humid_output.appendChild(document.createElement('br'));
+        }
+        for (let i = 0; i < light_count; i++) {
+            const textElement = document.createElement('span');
+            textElement.textContent = `光照传感器 ${i + 1}`;
+            textElement.style.fontSize = '18px';
+            l_status[i]=document.createElement('span');
+            l_status[i].textContent=status[0];
+            l_status[i].style.fontSize='18px';
+            if (l_status[i].textContent==="已关闭")l_status[i].style.color='red';
+            else if (l_status[i].textContent==="运行中")l_status[i].style.color='green';
+            l_dButtons[i] = document.createElement('button');
+            l_dButtons[i].setAttribute('class', 'layui-btn layui-btn-lg layui-btn-normal')
+            l_dButtons[i].textContent = '查看详情';
+            light_output.appendChild(textElement);
+            light_output.appendChild(l_status[i]);
+            light_output.appendChild(l_dButtons[i]);
+            light_output.style.textAlign = 'center'; // 居中对齐
+            light_output.style.marginTop = '50px';
+            textElement.style.marginRight="100px";
+            l_status[i].style.marginBottom = '20px';
+            l_dButtons[i].style.marginBottom = '20px';
+            textElement.style.marginBottom='40px';
+            l_status[i].style.marginRight='40px';
+            light_output.appendChild(document.createElement('br'));
+            light_output.appendChild(document.createElement('br'));
+        }
+        //事件
+        l_dButtons[0].addEventListener('click', function() {
+            const randomNumber = Math.round(Math.random());
+            l_status[0].textContent = status[randomNumber];
+            if (l_status[0].textContent==="已关闭")l_status[0].style.color='red';
+            else if (l_status[0].textContent==="运行中")l_status[0].style.color='green';
+        });
+    });
+</script>
+</body>
+</html>
