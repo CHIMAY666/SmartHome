@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECharts Demo</title>
+    <!-- 引入 ECharts -->
+    <script src="/js/echarts.js"></script>
+</head>
+
+<body>
+<div id="lineChart" style="width: 600px; height: 400px;"></div>
+<div id="barChart" style="width: 600px; height: 400px;"></div>
+<div id="gaugeChart" style="width: 600px; height: 400px;"></div>
+
+<script>
+    // 模拟数据
+    let xData = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    let yData = [20, 25, 30, 28, 32, 35, 27];
+    // 折线图
+    let lineChart = echarts.init(document.getElementById('lineChart'));
+    let lineOption = {
+        title: {
+            text: 'Temperature Line Chart'
+        },
+        xAxis: {
+            type: 'category',
+            data: xData
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: yData,
+            type: 'line'
+        }]
+    };
+    lineChart.setOption(lineOption);
+
+    // 柱状图
+    let barChart = echarts.init(document.getElementById('barChart'));
+    let barOption = {
+        title: {
+            text: 'Temperature Bar Chart'
+        },
+        xAxis: {
+            type: 'category',
+            data: xData
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: yData,
+            type: 'bar'
+        }]
+    };
+    barChart.setOption(barOption);
+    // 仪表盘
+    let gaugeChart = echarts.init(document.getElementById('gaugeChart'));
+    let gaugeOption = {
+        series: [{
+            type: 'gauge',
+            data: [{
+                value: yData[yData.length - 1],
+                name: 'Temperature'
+            }]
+        }]
+    };
+    gaugeChart.setOption(gaugeOption);
+</script>
+</body>
+
+</html>
