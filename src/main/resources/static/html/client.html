@@ -69,6 +69,19 @@
 
 <script src="//cdn.staticfile.net/layui/2.9.11/layui.js"></script>
 <script>
+    //js获取项目根路径，如： http://localhost:8080/
+    function getRootPath(){
+        //获取当前网址，如： http://localhost:8080/html/client.html
+        const curWwwPath = window.document.location.href;
+        //获取主机地址之后的目录，如： html/client.html
+        const pathName = window.document.location.pathname;
+        const pos = curWwwPath.indexOf(pathName);
+        //获取主机地址，如： http://localhost:8080
+        const localhostPath = curWwwPath.substring(0, pos);
+        return(localhostPath);
+    }
+    const rootPath = getRootPath();
+    const $ = layui.$;
     //JS
     const linkElements = document.querySelectorAll('.layui-nav-child dd a');
     linkElements.forEach(function(linkElement) {
@@ -87,7 +100,6 @@
         var element = layui.element;
         var layer = layui.layer;
         var util = layui.util;
-        var $ = layui.$;
         const list = [
             {
                 "deviceType": "temperature_sensor",
@@ -218,6 +230,72 @@
             else if (l_status[0].textContent==="运行中")l_status[0].style.color='green';
         });
     });
+
+    //查询所有设备值
+    function queryAllDevices() {
+        //设备列表，格式如下:
+        // [{
+        //     "deviceType": "temperature_sensor",
+        //     "deviceId": 1,
+        //     "status": {
+        //         "run": true
+        //     }
+        // }]
+        let deviceList = [];
+        $.ajax({
+            //请求方式
+            type : 'GET',
+            //请求的媒体类型
+            contentType : 'application/json;charset=UTF-8',
+            //同步加载
+            async : false,
+            //请求地址
+            url : rootPath + '/client/queryAllDevices',
+            //数据，json字符串
+            // data : JSON.stringify({
+            //     'homeId' : $('#home').val()
+            // }),
+            //请求成功
+            success : function(result) {
+                deviceList = result.data;
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e) {
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        });
+    }
+
+    //根据设备id查询历史温度数据
+    function queryHistoryTemperatures(deviceId){
+        //查询温度历史数据
+        $.ajax({
+            //请求方式
+            type : 'GET',
+            //请求的媒体类型
+            contentType : 'application/json;charset=UTF-8',
+            //请求地址
+            url : rootPath + '/client/queryHistoryTemperatures/' + deviceId,
+            //请求成功
+            success : function(result) {
+                let xData = []; //x轴：时间
+                let yData = []; //y轴：温度
+                let data = result.data;
+                for(let i = 0; i < data.length; i++) {
+                    yData.push(data[i].value);
+                    xData.push(data[i].time);
+                }
+                // TODO 把数据放到echarts中
+                //setTemperatureChart(xData, yData);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e) {
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        });
+    }
 </script>
 </body>
 </html>

@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface DeviceMapper {
     List<Device> getAllDevices();
+    Device getDevice(Integer deviceId);
 }
