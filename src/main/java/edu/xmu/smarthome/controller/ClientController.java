@@ -3,11 +3,16 @@ package edu.xmu.smarthome.controller;
 import edu.xmu.smarthome.entity.Device;
 import edu.xmu.smarthome.entity.ResultInfo;
 import edu.xmu.smarthome.server.ClientService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-@RestController
+/**
+ * 客户端控制器
+ */
+@Controller
 @RequestMapping("/client")
 public class ClientController {
     private final ClientService clientService;
@@ -21,6 +26,7 @@ public class ClientController {
      * @return 设备列表
      */
     @RequestMapping("/queryAllDevices")
+    @ResponseBody
     public ResultInfo queryAllDevices(){
         return ResultInfo.success(clientService.getAllDevices());
     }
@@ -31,6 +37,7 @@ public class ClientController {
      * @return 对应id的设备
      */
     @RequestMapping("/queryDevice/{deviceId}")
+    @ResponseBody
     public ResultInfo queryDevice(@PathVariable Integer deviceId){
         Device device = clientService.getDevice(deviceId);
         if(device != null) return ResultInfo.success(device);
@@ -43,7 +50,13 @@ public class ClientController {
      * @return 温度数据列表
      */
     @RequestMapping("/queryHistoryTemperatures/{deviceId}")
+    @ResponseBody
     public ResultInfo queryHistoryTemperatures(@PathVariable Integer deviceId){
         return ResultInfo.success(clientService.getHistoryTemperatures(deviceId));
+    }
+    @RequestMapping("/detail/{deviceId}")
+    public String showDetail(@PathVariable String deviceId, Model model){
+        model.addAttribute("deviceId", deviceId);
+        return "detail";
     }
 }
