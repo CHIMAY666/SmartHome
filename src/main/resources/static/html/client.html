@@ -229,6 +229,21 @@
             if (l_status[0].textContent==="已关闭")l_status[0].style.color='red';
             else if (l_status[0].textContent==="运行中")l_status[0].style.color='green';
         });
+        for(let i=0;i<temper_count;i++){
+            t_dButtons[i].addEventListener("click", function() {
+                window.open("chart.html", "_blank");
+            });
+        }
+        for(let i=0;i<humid_count;i++){
+            h_dButtons[i].addEventListener("click", function() {
+                window.open("chart.html", "_blank");
+            });
+        }
+        for(let i=0;i<light_count;i++){
+            l_dButtons[i].addEventListener("click", function() {
+                window.open("chart.html", "_blank");
+            });
+        }
     });
 
     //查询所有设备值
@@ -288,7 +303,7 @@
                     xData.push(data[i].time);
                 }
                 // TODO 把数据放到echarts中
-                //setTemperatureChart(xData, yData);
+                setTemperatureChart(xData, yData);
             },
             //请求失败，包含具体的错误信息
             error : function(e) {
@@ -297,6 +312,10 @@
             }
         });
     }
+    function setTemperatureChart(xData, yData){
+        window.location.href = "chart.html";
+    }
+
 </script>
 </body>
 </html>
