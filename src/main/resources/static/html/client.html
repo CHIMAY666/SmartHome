@@ -92,23 +92,38 @@
         const list = [
             {
                 "deviceType": "temperature_sensor",
-                "deviceId": 1
+                "deviceId": 1,
+                "status": {
+                    "run": false
+                }
             },
             {
                 "deviceType": "humidity_sensor",
-                "deviceId": 2
+                "deviceId": 2,
+                "status": {
+                    "run": true
+                        }
             },
             {
                 "deviceType": "lamp",
-                "deviceId": 3
+                "deviceId": 3,
+                "status": {
+                    "run": false
+                }
             },
             {
                 "deviceType": "lamp",
-                "deviceId": 4
+                "deviceId": 4,
+                "status": {
+                    "run": true
+                }
             },
             {
                 "deviceType": "lamp",
-                "deviceId": 5
+                "deviceId": 5,
+                "status": {
+                    "run": false
+                }
             },
         ];
         const status=["已关闭","运行中"];
@@ -136,106 +151,101 @@
         const temper_output = document.getElementById('temper_output');
         const humid_output = document.getElementById('humid_output');
         const light_output = document.getElementById('light_output');
-        for (let i = 0; i < temper_count; i++) {
-            const textElement = document.createElement('span');
-            textElement.textContent = `温度传感器 ${i + 1} `;
-            textElement.style.fontSize = '18px';
-            t_status[i]=document.createElement('span');
-            t_status[i].textContent=status[0];
-            t_status[i].style.fontSize='18px';
-            if (t_status[i].textContent==="已关闭")t_status[i].style.color='red';
-            else if (t_status[i].textContent==="运行中")t_status[i].style.color='green';
-            t_dButtons[i] = document.createElement('button');
-            t_dButtons[i].setAttribute('class', 'layui-btn layui-btn-lg layui-btn-normal')
-            t_dButtons[i].textContent = '查看详情';
-            temper_output.appendChild(textElement);
-            temper_output.appendChild(t_status[i]);
-            temper_output.appendChild(t_dButtons[i]);
-            temper_output.style.textAlign = 'center'; // 居中对齐
-            temper_output.style.marginTop = '50px';
-            textElement.style.marginRight="100px";
-            t_status[i].style.marginBottom = '20px';
-            t_dButtons[i].style.marginBottom = '20px';
-            textElement.style.marginBottom='40px';
-            t_status[i].style.marginRight='40px';
-            temper_output.appendChild(document.createElement('br'));
-            temper_output.appendChild(document.createElement('br'));
-        }
-        for (let i = 0; i <humid_count; i++) {
-            const textElement = document.createElement('span');
-            textElement.textContent = `湿度传感器 ${i + 1}`;
-            textElement.style.fontSize = '18px';
-            h_status[i]=document.createElement('span');
-            h_status[i].textContent=status[0];
-            h_status[i].style.fontSize='18px';
-            if (h_status[i].textContent==="已关闭")h_status[i].style.color='red';
-            else if (h_status[i].textContent==="运行中")h_status[i].style.color='green';
-            h_dButtons[i] = document.createElement('button');
-            h_dButtons[i].setAttribute('class', 'layui-btn layui-btn-lg layui-btn-normal')
-            h_dButtons[i].textContent = '查看详情';
-            humid_output.appendChild(textElement);
-            humid_output.appendChild(h_status[i]);
-            humid_output.appendChild(h_dButtons[i]);
-            humid_output.style.textAlign = 'center'; // 居中对齐
-            humid_output.style.marginTop = '50px';
-            textElement.style.marginRight="100px";
-            h_status[i].style.marginBottom = '20px';
-            h_dButtons[i].style.marginBottom = '20px';
-            textElement.style.marginBottom='40px';
-            h_status[i].style.marginRight='40px';
-            humid_output.appendChild(document.createElement('br'));
-            humid_output.appendChild(document.createElement('br'));
-        }
-        for (let i = 0; i < light_count; i++) {
-            const textElement = document.createElement('span');
-            textElement.textContent = `光照传感器 ${i + 1}`;
-            textElement.style.fontSize = '18px';
-            l_status[i]=document.createElement('span');
-            l_status[i].textContent=status[0];
-            l_status[i].style.fontSize='18px';
-            if (l_status[i].textContent==="已关闭")l_status[i].style.color='red';
-            else if (l_status[i].textContent==="运行中")l_status[i].style.color='green';
-            l_dButtons[i] = document.createElement('button');
-            l_dButtons[i].setAttribute('class', 'layui-btn layui-btn-lg layui-btn-normal')
-            l_dButtons[i].textContent = '查看详情';
-            light_output.appendChild(textElement);
-            light_output.appendChild(l_status[i]);
-            light_output.appendChild(l_dButtons[i]);
-            light_output.style.textAlign = 'center'; // 居中对齐
-            light_output.style.marginTop = '50px';
-            textElement.style.marginRight="100px";
-            l_status[i].style.marginBottom = '20px';
-            l_dButtons[i].style.marginBottom = '20px';
-            textElement.style.marginBottom='40px';
-            l_status[i].style.marginRight='40px';
-            light_output.appendChild(document.createElement('br'));
-            light_output.appendChild(document.createElement('br'));
-        }
-        //事件
-        l_dButtons[0].addEventListener('click', function() {
-            const randomNumber = Math.round(Math.random());
-            l_status[0].textContent = status[randomNumber];
-            if (l_status[0].textContent==="已关闭")l_status[0].style.color='red';
-            else if (l_status[0].textContent==="运行中")l_status[0].style.color='green';
-        });
-        for(let i=0;i<temper_count;i++){
-            t_dButtons[i].addEventListener("click", function() {
-                window.open("/client/detail/1", "_blank");
-            });
-        }
-        for(let i=0;i<humid_count;i++){
-            h_dButtons[i].addEventListener("click", function() {
-                window.open("chart.html", "_blank");
-            });
-        }
-        for(let i=0;i<light_count;i++){
-            l_dButtons[i].addEventListener("click", function() {
-                window.open("chart.html", "_blank");
-            });
+        let t=1,h=1,l=1;
+        for (let i = 0; i < list.length; i++) {
+            switch (list[i].deviceType) {
+                case "temperature_sensor": {
+                    const textElement = document.createElement('span');
+                    textElement.textContent = `温度传感器 ${t++} `;
+                    textElement.style.fontSize = '18px';
+                    t_status[t] = document.createElement('span');
+                    if(list[i].status.run)t_status[t].textContent = "运行中";
+                    else t_status[t].textContent = "已关闭";
+                    t_status[t].style.fontSize = '18px';
+                    if (t_status[t].textContent === "已关闭") t_status[t].style.color = 'red';
+                    else if (t_status[t].textContent === "运行中") t_status[t].style.color = 'green';
+                    t_dButtons[t] = document.createElement('button');
+                    t_dButtons[t].setAttribute('class', 'layui-btn layui-btn-lg layui-btn-normal')
+                    t_dButtons[t].textContent = '查看详情';
+                    temper_output.appendChild(textElement);
+                    temper_output.appendChild(t_status[t]);
+                    temper_output.appendChild(t_dButtons[t]);
+                    temper_output.style.textAlign = 'center'; // 居中对齐
+                    temper_output.style.marginTop = '50px';
+                    textElement.style.marginRight = "100px";
+                    t_status[t].style.marginBottom = '20px';
+                    t_dButtons[t].style.marginBottom = '20px';
+                    textElement.style.marginBottom = '40px';
+                    t_status[t].style.marginRight = '40px';
+                    temper_output.appendChild(document.createElement('br'));
+                    temper_output.appendChild(document.createElement('br'));
+                    t_dButtons[t].addEventListener("click", function() {
+                        window.open("/client/detail/"+list[i].deviceId, "_blank");
+                    });
+                    break;
+                }
+                case "humidity_sensor": {
+                    const textElement = document.createElement('span');
+                    textElement.textContent = `湿度传感器 ${h++}`;
+                    textElement.style.fontSize = '18px';
+                    h_status[h] = document.createElement('span');
+                    if(list[i].status.run)h_status[h].textContent = "运行中";
+                    else h_status[h].textContent = "已关闭";
+                    h_status[h].style.fontSize = '18px';
+                    if (h_status[h].textContent === "已关闭") h_status[h].style.color = 'red';
+                    else if (h_status[h].textContent === "运行中") h_status[h].style.color = 'green';
+                    h_dButtons[h] = document.createElement('button');
+                    h_dButtons[h].setAttribute('class', 'layui-btn layui-btn-lg layui-btn-normal')
+                    h_dButtons[h].textContent = '查看详情';
+                    humid_output.appendChild(textElement);
+                    humid_output.appendChild(h_status[h]);
+                    humid_output.appendChild(h_dButtons[h]);
+                    humid_output.style.textAlign = 'center'; // 居中对齐
+                    humid_output.style.marginTop = '50px';
+                    textElement.style.marginRight = "100px";
+                    h_status[h].style.marginBottom = '20px';
+                    h_dButtons[h].style.marginBottom = '20px';
+                    textElement.style.marginBottom = '40px';
+                    h_status[h].style.marginRight = '40px';
+                    humid_output.appendChild(document.createElement('br'));
+                    humid_output.appendChild(document.createElement('br'));
+                    h_dButtons[h].addEventListener("click", function() {
+                        window.open("/client/detail/"+list[i].deviceId, "_blank");
+                    });
+                    break;
+                }
+                case "lamp": {
+                    const textElement = document.createElement('span');
+                    textElement.textContent = `光照传感器 ${l++}`;
+                    textElement.style.fontSize = '18px';
+                    l_status[l] = document.createElement('span');
+                    if(list[i].status.run)l_status[l].textContent = "运行中";
+                    else l_status[l].textContent = "已关闭";
+                    l_status[l].style.fontSize = '18px';
+                    if (l_status[l].textContent === "已关闭") l_status[l].style.color = 'red';
+                    else if (l_status[l].textContent === "运行中") l_status[l].style.color = 'green';
+                    l_dButtons[l] = document.createElement('button');
+                    l_dButtons[l].setAttribute('class', 'layui-btn layui-btn-lg layui-btn-normal')
+                    l_dButtons[l].textContent = '查看详情';
+                    light_output.appendChild(textElement);
+                    light_output.appendChild(l_status[l]);
+                    light_output.appendChild(l_dButtons[l]);
+                    light_output.style.textAlign = 'center'; // 居中对齐
+                    light_output.style.marginTop = '50px';
+                    textElement.style.marginRight = "100px";
+                    l_status[l].style.marginBottom = '20px';
+                    l_dButtons[l].style.marginBottom = '20px';
+                    textElement.style.marginBottom = '40px';
+                    l_status[l].style.marginRight = '40px';
+                    light_output.appendChild(document.createElement('br'));
+                    light_output.appendChild(document.createElement('br'));
+                    l_dButtons[l].addEventListener("click", function() {
+                        window.open("/client/detail/"+list[i].deviceId, "_blank");
+                    });
+                }
+            }
         }
     });
-
-
 </script>
 </body>
 </html>
