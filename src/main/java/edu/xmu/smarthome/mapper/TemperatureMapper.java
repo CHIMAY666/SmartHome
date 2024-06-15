@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TemperatureMapper {
     List<Temperature> getHistoryTemperatures(Integer deviceId);
+
+    void insertTemperature(Temperature temperature);
 }

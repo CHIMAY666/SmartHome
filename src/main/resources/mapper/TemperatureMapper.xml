@@ -9,4 +9,9 @@
             (SELECT * FROM temperature WHERE deviceId = #{deviceId} ORDER BY date DESC LIMIT 20) as A
         ORDER BY A.date
     </select>
+    <insert id="insertTemperature">
+        INSERT INTO
+            temperature (deviceId, value, date)
+        VALUE (#{deviceId}, #{value}, #{date})
+    </insert>
 </mapper>

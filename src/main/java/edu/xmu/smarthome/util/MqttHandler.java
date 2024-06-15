@@ -32,9 +32,9 @@ public class MqttHandler {
         options.setConnectionTimeout(60);
         options.setKeepAliveInterval(60);
         options.setAutomaticReconnect(true);
-        //client.setCallback(new MqttReceiver());
+        client.setCallback(new MqttReceiver(clientService));
         client.connect(options);
-        //client.subscribe(MqttConfig.sub_topic);
+        client.subscribe(MqttConfig.sub_topic);
         // 初始化设备
         List<Device> devices = clientService.getAllDevices();
         JsonNode deviceList = mapper.readTree(mapper.writeValueAsString(devices));
