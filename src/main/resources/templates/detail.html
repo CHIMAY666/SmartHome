@@ -18,9 +18,7 @@
 
     <script th:inline="javascript">
         const deviceId = [[${deviceId}]];
-        // 模拟数据
-        let xData = ['1', '2', '3'];
-        let yData = [20, 25, 30];
+        const deviceType = [[${deviceType}]];
         // 折线图
         let lineChart = echarts.init(document.getElementById('lineChart'));
         let lineOption = {
@@ -44,16 +42,12 @@
                 text: 'Temperature Bar Chart'
             },
             xAxis: {
+                name: '时间',
                 type: 'category',
-                data: xData
             },
             yAxis: {
                 type: 'value'
-            },
-            series: [{
-                data: yData,
-                type: 'bar'
-            }]
+            }
         };
         barChart.setOption(barOption);
         // 仪表盘
@@ -62,7 +56,7 @@
             series: [{
                 type: 'gauge',
                 data: [{
-                    value: yData[yData.length - 1],
+                    value: 0,
                     name: 'Temperature'
                 }]
             }]
@@ -71,24 +65,39 @@
 
         //刷新数据
         function refresh(){
-            let {x, y} = queryHistoryTemperatures(deviceId);
-            let option = lineChart.getOption();
+            let {x, y} = queryHistory(deviceId, deviceType);
+            let lineOption = lineChart.getOption();
             for(let i = 0; i < x.length; i++){
                 x[i] = echarts.format.formatTime("hh:mm:ss", x[i]);
             }
-            option.xAxis = {
+            lineOption.xAxis = {
                 name: '时间',
                 type: 'category',
                 data: x
             };
-            option.series = [{
+            lineOption.series = [{
                 name: '传感器',
                 data: y,
                 type: 'line',
                 smooth: true,
                 areaStyle: {}
             }];
-            lineChart.setOption(option);
+            lineChart.setOption(lineOption);
+            let barOption = barChart.getOption();
+            barOption.xAxis = {
+                name: '时间',
+                type: 'category',
+                data: x
+            }
+            barOption.series = [{
+                name: '传感器',
+                data: y,
+                type: 'bar',
+            }];
+            barChart.setOption(barOption);
+            let gaugeOption = gaugeChart.getOption();
+            gaugeOption.series[0].data[0].value = y[y.length - 1];
+            gaugeChart.setOption(gaugeOption);
         }
         //定时刷新,间隔:1s
         setInterval(function (){

@@ -9,4 +9,13 @@
     <select id="getDevice" resultType="edu.xmu.smarthome.entity.Device">
         SELECT * FROM device WHERE id = #{deviceId}
     </select>
+
+    <update id="updateDevice">
+        UPDATE device
+        SET
+            type = #{type},
+            status = #{status}
+        WHERE
+            id = #{id}
+    </update>
 </mapper>

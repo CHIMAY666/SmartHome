@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="edu.xmu.smarthome.mapper.TemperatureMapper">
+<mapper namespace="edu.xmu.smarthome.mapper.LightMapper">
 
-    <select id="getHistory" resultType="edu.xmu.smarthome.entity.Temperature">
+    <select id="getHistory" resultType="edu.xmu.smarthome.entity.Light">
         SELECT
             *
         FROM
-            (SELECT * FROM temperature WHERE deviceId = #{deviceId} ORDER BY date DESC LIMIT 20) as A
+            (SELECT * FROM light WHERE deviceId = #{deviceId} ORDER BY date DESC LIMIT 20) as A
         ORDER BY A.date
     </select>
     <insert id="insert">
         INSERT INTO
-            temperature (deviceId, value, date)
+            light (deviceId, value, date)
         VALUE (#{deviceId}, #{value}, #{date})
     </insert>
     <delete id="clearHistory">
         DELETE
-        FROM temperature
+        FROM light
         WHERE deviceId = #{deviceId}
     </delete>
     <delete id="deleteAll">
-        TRUNCATE TABLE temperature
+        TRUNCATE TABLE light
     </delete>
 </mapper>

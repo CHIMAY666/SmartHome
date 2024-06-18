@@ -5,6 +5,6 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class Temperature extends DeviceData {
-    private Float value;
+public class Light extends DeviceData {
+    private Integer value;
 }

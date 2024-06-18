@@ -32,6 +32,7 @@ public class MqttHandler {
         options.setConnectionTimeout(60);
         options.setKeepAliveInterval(60);
         options.setAutomaticReconnect(true);
+        options.setMaxInflight(1000);
         client.setCallback(new MqttReceiver(clientService));
         client.connect(options);
         client.subscribe(MqttConfig.sub_topic);
@@ -60,10 +61,12 @@ public class MqttHandler {
         try {
             MqttMessage msg = new MqttMessage(message.getBytes());
             msg.setQos(MqttConfig.QOS);
+            System.out.println("publish");
             client.publish(topic, msg);
         }
-        catch (MqttException ignored) {
+        catch (MqttException e) {
             System.err.println("发布MQTT消息失败！");
+            e.printStackTrace();
         }
     }
 }

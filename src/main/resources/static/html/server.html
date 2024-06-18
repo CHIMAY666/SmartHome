@@ -6,7 +6,7 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="//cdn.staticfile.net/layui/2.9.11/css/layui.css" rel="stylesheet">
+    <link href="../css/layui.css" rel="stylesheet">
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">
@@ -67,7 +67,7 @@
     </div>
 </div>
 
-<script src="//cdn.staticfile.net/layui/2.9.11/layui.js"></script>
+<script src="../js/layui.js"></script>
 <script src="../js/api_tools.js"></script>
 <script>
     const $ = layui.$;
@@ -86,31 +86,10 @@
         });
     });
     layui.use(['element', 'layer', 'util'], function(){
-        var element = layui.element;
-        var layer = layui.layer;
-        var util = layui.util;
-        const list = [
-            {
-                "deviceType": "temperature_sensor",
-                "deviceId": 1
-            },
-            {
-                "deviceType": "humidity_sensor",
-                "deviceId": 2
-            },
-            {
-                "deviceType": "lamp",
-                "deviceId": 3
-            },
-            {
-                "deviceType": "lamp",
-                "deviceId": 4
-            },
-            {
-                "deviceType": "lamp",
-                "deviceId": 5
-            },
-        ];
+        const element = layui.element;
+        const layer = layui.layer;
+        const util = layui.util;
+        const list = queryAllDevices();
         const cardHeaderElements = document.querySelectorAll('.layui-card-header');
         cardHeaderElements.forEach(element => {
             element.style.fontSize = '20px'; // 设置字体大小为20px
@@ -121,9 +100,9 @@
         let temper_count = 0,humid_count=0,light_count=0;
         // 遍历列表，统计符合条件的元素数量
         for (let i = 0; i < list.length; i++) {
-            if(list[i].deviceType==="temperature_sensor")temper_count++;
-            if(list[i].deviceType==="humidity_sensor")humid_count++;
-            if(list[i].deviceType==="lamp")light_count++;
+            if(list[i].type==="temperature_sensor")temper_count++;
+            if(list[i].type==="humidity_sensor")humid_count++;
+            if(list[i].type==="light_sensor")light_count++;
         }
         const t_startButtons = new Array(temper_count);
         const h_startButtons = new Array(humid_count);
@@ -138,7 +117,7 @@
         const len = "          ";
         let t=1,h=1,l=1;
         for (let i = 0; i < list.length; i++) {
-            switch (list[i].deviceType)
+            switch (list[i].type)
             {
                 case "temperature_sensor":{
                     const textElement = document.createElement('span');
@@ -164,13 +143,13 @@
                     temper_output.appendChild(document.createElement('br'));
                     t_startButtons[t].addEventListener("click", function() {
                         //window.open("/client/detail/1", "_blank");
-                        window.alert("start temper deviceid:"+list[i].deviceId);
-                        controlDevice(list[i].deviceId, {"run": true})
+                        window.alert("start temper deviceid:"+list[i].id);
+                        controlDevice(list[i].id, {"run": true})
                     });
                     t_endButtons[t].addEventListener("click", function() {
                         //window.open("/client/detail/1", "_blank");
-                        window.alert("end temper deviceid:"+list[i].deviceId);
-                        controlDevice(list[i].deviceId, {"run": false})
+                        window.alert("end temper deviceid:"+list[i].id);
+                        controlDevice(list[i].id, {"run": false})
                     });
                     break;
                 }
@@ -198,17 +177,17 @@
                     humid_output.appendChild(document.createElement('br'));
                     h_startButtons[h].addEventListener("click", function() {
                         //window.open("/client/detail/1", "_blank");
-                        window.alert("start humid deviceid:"+list[i].deviceId);
-                        controlDevice(list[i].deviceId, {"run": true})
+                        window.alert("start humid deviceid:"+list[i].id);
+                        controlDevice(list[i].id, {"run": true})
                     });
                     h_endButtons[h].addEventListener("click", function() {
                         //window.open("/client/detail/1", "_blank");
-                        window.alert("end humid deviceid:"+list[i].deviceId);
-                        controlDevice(list[i].deviceId, {"run": false})
+                        window.alert("end humid deviceid:"+list[i].id);
+                        controlDevice(list[i].id, {"run": false})
                     });
                     break;
                 }
-                case "lamp":{
+                case "light_sensor":{
                     const textElement = document.createElement('span');
                     textElement.textContent = `光照传感器 ${l++}`;
                     textElement.style.fontSize = '18px';
@@ -232,13 +211,13 @@
                     light_output.appendChild(document.createElement('br'));
                     l_startButtons[l].addEventListener("click", function() {
                         //window.open("/client/detail/1", "_blank");
-                        window.alert("start light deviceid:"+list[i].deviceId);
-                        controlDevice(list[i].deviceId, {"run": true})
+                        window.alert("start light deviceid:"+list[i].id);
+                        controlDevice(list[i].id, {"run": true})
                     });
                     l_endButtons[l].addEventListener("click", function() {
                         //window.open("/client/detail/1", "_blank");
-                        window.alert("end light deviceid:"+list[i].deviceId);
-                        controlDevice(list[i].deviceId, {"run": false})
+                        window.alert("end light deviceid:"+list[i].id);
+                        controlDevice(list[i].id, {"run": false})
                     });
                     }
                 }

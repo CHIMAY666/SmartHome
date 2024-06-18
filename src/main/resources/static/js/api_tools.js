@@ -15,8 +15,8 @@ const rootPath = getRootPath();
 function queryAllDevices() {
     //设备列表，格式如下:
     // [{
-    //     "deviceType": "temperature_sensor",
-    //     "deviceId": 1,
+    //     "type": "temperature_sensor",
+    //     "id": 1,
     //     "status": {
     //         "run": true
     //     }
@@ -90,6 +90,41 @@ function queryHistoryTemperatures(deviceId){
         contentType : 'application/json;charset=UTF-8',
         //请求地址
         url : rootPath + '/client/queryHistoryTemperatures/' + deviceId,
+        async: false,
+        //请求成功
+        success : function(result) {
+            let data = result.data;
+            for(let i = 0; i < data.length; i++) {
+                y.push(data[i].value);
+                x.push(new Date(data[i].date));
+            }
+        },
+        //请求失败，包含具体的错误信息
+        error : function(e) {
+            console.log(e.status);
+            console.log(e.responseText);
+        }
+    });
+    return {x, y};
+}
+
+//根据设备id和设备类型查询历史数据
+function queryHistory(deviceId, deviceType){
+    let x = []; //x轴：时间
+    let y = []; //y轴：温度
+    //查询温度历史数据
+    $.ajax({
+        //请求方式
+        type : 'POST',
+        //请求的媒体类型
+        contentType : 'application/json;charset=UTF-8',
+        //请求地址
+        url : rootPath + '/client/queryHistory',
+        //数据，json字符串
+        data : JSON.stringify({
+            'deviceId': deviceId,
+            'deviceType': deviceType
+        }),
         async: false,
         //请求成功
         success : function(result) {

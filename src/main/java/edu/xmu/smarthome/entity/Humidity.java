@@ -1,13 +1,10 @@
 package edu.xmu.smarthome.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class Humidity {
-    private Integer id;
-    private Integer deviceId;
+public class Humidity extends DeviceData {
     private Float value;
-    private LocalDateTime date;
 }
